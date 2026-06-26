@@ -76,6 +76,30 @@ def test_call_bad_arguments(toolbox: Toolbox) -> None:
     assert "error" in toolbox.call("get_schema", {"wrong": "x"})
 
 
+def test_call_normalises_run_sql_alias(toolbox: Toolbox) -> None:
+    # Small models often emit `sql=`/`statement=` instead of `query=`.
+    for alias in ("sql", "statement", "q"):
+        result = toolbox.call("run_sql", {alias: "SELECT id FROM customers"})
+        assert "error" not in result, f"alias {alias!r} should normalise to 'query'"
+        assert result["row_count"] >= 1
+
+
+def test_call_normalises_get_schema_alias(toolbox: Toolbox) -> None:
+    for alias in ("table_name", "name", "tablename"):
+        result = toolbox.call("get_schema", {alias: "customers"})
+        assert "error" not in result, f"alias {alias!r} should normalise to 'table'"
+        assert result["table"] == "customers"
+
+
+def test_call_canonical_arg_wins_over_alias(toolbox: Toolbox) -> None:
+    # If both canonical and alias are present, the canonical value is used.
+    result = toolbox.call(
+        "run_sql", {"query": "SELECT id FROM customers", "sql": "DROP TABLE customers"}
+    )
+    assert "error" not in result
+    assert result["row_count"] >= 1
+
+
 def test_row_limit_truncation(seeded_db) -> None:
     small = Toolbox(seeded_db, row_limit=2)
     result = small.run_sql("SELECT id FROM customers ORDER BY id")

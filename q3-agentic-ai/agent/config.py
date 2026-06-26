@@ -81,7 +81,7 @@ def get_settings() -> Settings:
         llm_model=os.getenv("LLM_MODEL", "llama3.1:8b"),
         database_url=database_url,
         db_path=_sqlite_path_from_url(database_url),
-        max_iterations=int(os.getenv("AGENT_MAX_ITERATIONS", "8")),
+        max_iterations=int(os.getenv("AGENT_MAX_ITERATIONS", "12")),
         sql_row_limit=int(os.getenv("SQL_ROW_LIMIT", "1000")),
         request_timeout=float(os.getenv("OLLAMA_TIMEOUT", "120")),
     )

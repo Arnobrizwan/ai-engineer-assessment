@@ -162,7 +162,7 @@ generated SQL, the result table, an optional chart, and the final answer.
 ## Testing strategy
 
 ```bash
-pytest -q                  # unit tests, no live LLM required (42 tests)
+pytest -q                  # unit tests, no live LLM required (51 tests)
 pytest -m integration      # optional live end-to-end test (needs Ollama)
 ```
 

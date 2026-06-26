@@ -324,8 +324,34 @@ class Toolbox:
             "make_chart": self.make_chart,
         }
 
+    # Common argument-name aliases small local models emit, mapped to the
+    # canonical parameter each tool actually accepts. Normalising these avoids
+    # burning a whole reasoning iteration on a recoverable ``TypeError``.
+    _ARG_ALIASES: dict[str, dict[str, str]] = {
+        "run_sql": {"sql": "query", "statement": "query", "q": "query"},
+        "get_schema": {"table_name": "table", "name": "table", "tablename": "table"},
+    }
+
+    def _normalise_arguments(
+        self, name: str, arguments: dict[str, Any]
+    ) -> dict[str, Any]:
+        """Rewrite known argument aliases to the tool's canonical parameter names."""
+        aliases = self._ARG_ALIASES.get(name)
+        if not aliases or not arguments:
+            return arguments or {}
+        normalised: dict[str, Any] = {}
+        for key, value in arguments.items():
+            canonical = aliases.get(key, key)
+            # Don't overwrite a value the model already supplied canonically.
+            normalised.setdefault(canonical, value)
+        return normalised
+
     def call(self, name: str, arguments: dict[str, Any]) -> dict[str, Any]:
         """Execute the named tool with keyword ``arguments``.
+
+        Argument aliases that small local models commonly emit (e.g. ``sql`` for
+        ``run_sql``'s ``query`` parameter) are normalised before dispatch so a
+        recoverable naming slip does not cost a reasoning iteration.
 
         Args:
             name: Tool name (must exist in :attr:`dispatch`).
@@ -339,7 +365,7 @@ class Toolbox:
         if fn is None:
             return {"error": f"Unknown tool: {name!r}"}
         try:
-            return fn(**(arguments or {}))
+            return fn(**self._normalise_arguments(name, arguments))
         except TypeError as exc:
             return {"error": f"Bad arguments for tool {name!r}: {exc}"}
 

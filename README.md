@@ -35,9 +35,9 @@ Each subproject has its own deep‑dive `README.md` and a `REQUIREMENTS.md` that
 |---------|-----------|------------------------|
 | Q1 Agentic RAG | **30 passed** | live hybrid retrieval; eval harness: **100% hit‑rate, 100% groundedness** |
 | Q2 Streaming Chat | **19 passed** | real SSE token stream against live Ollama |
-| Q3 Agentic AI | **48 passed** | live tool‑calling loop against `llama3.1:8b` (3/3 stable) |
+| Q3 Agentic AI | **51 passed** | live tool‑calling loop against `llama3.1:8b` (3/3 stable) |
 
-> **97 unit tests, all green, no LLM required.** Each project also has one live `@pytest.mark.integration` test that runs end‑to‑end against Ollama and was verified passing during development.
+> **100 unit tests, all green, no LLM required.** Each project also has one live `@pytest.mark.integration` test that runs end‑to‑end against Ollama and was verified passing during development.
 
 ```bash
 cd <project> && . .venv/bin/activate && pytest -q          # unit suite, no LLM needed
