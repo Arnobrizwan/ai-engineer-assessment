@@ -12,6 +12,14 @@ A single monorepo that answers **all three** assessment questions at an advanced
 
 ---
 
+## Demo
+
+Live token-by-token SSE streaming **and** DB-backed session memory (Q2) — the assistant is told a name, then recalls it on a fresh request in the same session because prior turns are replayed from SQLite:
+
+![Q2 streaming + memory demo](./docs/demo.gif)
+
+> Recorded from the real running app with [`vhs`](https://github.com/charmbracelet/vhs) (tape: [`docs/demo.tape`](./docs/demo.tape)) using the bundled streaming client [`q2-streaming-chat/client.sh`](./q2-streaming-chat/client.sh). Q1 and Q3 are best seen interactively — see [`PRESENTATION.md`](./PRESENTATION.md) for the full demo flow.
+
 ## TL;DR — one command
 
 A top-level [`setup.sh`](./setup.sh) bootstraps and runs everything (Python 3.11 + Ollama required):
