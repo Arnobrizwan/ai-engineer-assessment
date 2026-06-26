@@ -29,3 +29,4 @@ chroma/
 .idea/
 .vscode/
 *.swp
+.run/

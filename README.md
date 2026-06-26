@@ -12,7 +12,23 @@ A single monorepo that answers **all three** assessment questions at an advanced
 
 ---
 
-## TL;DR — run it
+## TL;DR — one command
+
+A top-level [`setup.sh`](./setup.sh) bootstraps and runs everything (Python 3.11 + Ollama required):
+
+```bash
+./setup.sh doctor     # check tools, models, and venv status
+./setup.sh setup      # pull models, create per-project venvs, install deps, seed Q3 DB
+./setup.sh test       # run all three unit suites (100 tests, no LLM needed)
+./setup.sh run all    # launch all three in the background (Q1 :8501, Q2 :8000, Q3 :8502)
+./setup.sh stop       # stop them and free the ports
+# or run one in the foreground:
+./setup.sh run q1     # q1 | q2 | q3
+```
+
+Ports and models are overridable via env (`LLM_MODEL`, `EMBED_MODEL`, `Q1_PORT`, `Q2_PORT`, `Q3_PORT`).
+
+### Or set up a single project manually
 
 ```bash
 # 0. Prerequisites: Python 3.11, Ollama installed and running
@@ -76,6 +92,7 @@ The whole suite is built so **CI can run it without a GPU or an API key** — ev
 ai-engineer-assessment/
 ├── README.md                 # ← you are here (overview + presentation map)
 ├── PRESENTATION.md           # 15–20 min demo script / talk track
+├── setup.sh                  # one entry point: setup / test / run all / stop / doctor
 ├── LICENSE
 ├── q1-agentic-rag/           # Question 1 — self-contained
 ├── q2-streaming-chat/        # Question 2 — self-contained
