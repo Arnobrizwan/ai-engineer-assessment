@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Environment / secrets
+.env
+*.local
+
+# Databases / generated artifacts
+*.db
+*.sqlite
+*.sqlite3
+chroma/
+.chroma/
+**/storage/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp

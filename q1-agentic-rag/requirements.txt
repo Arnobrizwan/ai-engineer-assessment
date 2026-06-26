@@ -1,0 +1,14 @@
+# --- Core app ---
+streamlit==1.39.0
+python-dotenv==1.0.1
+requests==2.32.3
+
+# --- Retrieval ---
+numpy==1.26.4            # dense vector index (cosine similarity)
+rank-bm25==0.2.2         # sparse BM25 retrieval
+
+# --- Document loading ---
+pypdf==4.3.1
+
+# --- Testing ---
+pytest==8.3.3

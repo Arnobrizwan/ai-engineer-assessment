@@ -1,0 +1,6 @@
+{"question": "What gases does photosynthesis produce?", "expected_substrings": ["oxygen", "glucose"], "expected_source": "photosynthesis.md"}
+{"question": "What pigment absorbs light in plants?", "expected_substrings": ["chlorophyll"], "expected_source": "photosynthesis.md"}
+{"question": "How many moons does Mars have and what are they called?", "expected_substrings": ["phobos", "deimos"], "expected_source": "mars.md"}
+{"question": "Why is Mars called the Red Planet?", "expected_substrings": ["iron oxide"], "expected_source": "mars.md"}
+{"question": "How long is the Great Wall of China?", "expected_substrings": ["21,196", "kilometres"], "expected_source": "great_wall.md"}
+{"question": "When was the Great Wall made a UNESCO World Heritage Site?", "expected_substrings": ["1987"], "expected_source": "great_wall.md"}

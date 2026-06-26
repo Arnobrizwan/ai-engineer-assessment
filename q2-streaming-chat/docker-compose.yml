@@ -1,0 +1,21 @@
+services:
+  chat:
+    build: .
+    container_name: q2-streaming-chat
+    ports:
+      - "8000:8000"
+    environment:
+      # Ollama runs on the host; host.docker.internal resolves to the host.
+      OLLAMA_BASE_URL: "http://host.docker.internal:11434"
+      LLM_MODEL: "llama3.1:8b"
+      DATABASE_URL: "sqlite:////data/chat.db"
+    volumes:
+      # Persist the SQLite database across container restarts.
+      - chat-data:/data
+    extra_hosts:
+      # Required on Linux so host.docker.internal resolves to the host gateway.
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+volumes:
+  chat-data:
