@@ -130,3 +130,35 @@ ai-engineer-assessment/
 4. **Requirement traceability** — each project ships a `REQUIREMENTS.md` mapping the brief to code.
 
 See [`PRESENTATION.md`](./PRESENTATION.md) for the suggested demo flow.
+
+---
+
+## Final summary
+
+A single public monorepo answering **all three** assessment questions at an advanced level, running **100% locally** on Ollama (`llama3.1:8b` + `nomic-embed-text`) — no paid API keys. Every requirement and every optional bonus is implemented and verified end‑to‑end against the live model.
+
+### What was built
+- **Q1 — Agentic RAG** (`q1-agentic-rag/`): a self‑grading agent loop — query rewrite → **hybrid retrieval** (NumPy dense + BM25 + **RRF** + rerank) → **per‑chunk relevance grading** → reformulate/re‑retrieve → grounded answer or an honest *"insufficient evidence"*. **Citations** `[doc p.X / chunk N]` map to exact source passages. Streamlit UI + eval harness.
+- **Q2 — Streaming Chat** (`q2-streaming-chat/`): one **FastAPI SSE** endpoint streaming the LLM **token‑by‑token** (with `Cache‑Control: no‑cache` / `X‑Accel‑Buffering: no`), **DB‑backed session memory** (SQLAlchemy/SQLite), a polished vanilla‑JS chat UI, and **Docker + compose**.
+- **Q3 — Agentic AI / SQL Analyst** (`q3-agentic-ai/`): a **ReAct tool‑calling** agent over a seeded SQLite DB (`list_tables`, `get_schema`, `run_sql`, `make_chart`) with **self‑correction** and a **read‑only SQL guardrail**. Streamlit trace UI.
+
+### Verification
+| | Unit tests | Live (real `llama3.1:8b`) |
+|---|---|---|
+| Q1 | **47** ✅ | hit‑rate 100% · MRR 1.000 · nDCG@5 0.995 · groundedness 100% · faithfulness 0.92 |
+| Q2 | **19** ✅ | real SSE token stream ✅ · Docker container streamed ✅ |
+| Q3 | **62** ✅ | tool‑calling loop ✅ · SQL‑answer accuracy 12/12 = 100% (avg 3.3 iters) |
+
+**128 unit tests, all green with no LLM required** (CI‑friendly) · 3/3 live integration tests pass · 50 Python files compile · no secrets committed.
+
+### Requirement coverage (incl. bonuses)
+- **Q1:** agentic retrieval ✅ · Streamlit prototype ✅ · thought‑process discussion ✅ · Traditional vs Agentic RAG investigation ✅ · test cases ✅ · **bonus** citations + optimized retrieval ✅
+- **Q2:** 1 FastAPI streaming endpoint ✅ · frontend ✅ · DB session memory ✅ · discussion ✅ · LLM of choice ✅ · no‑auth ✅ · test cases ✅ · **bonus** Docker + friendly UI + testing methodology ✅
+- **Q3:** agent ↔ external environment ✅ · Streamlit demo ✅ · implementation‑flow discussion ✅ · Agentic AI investigation (components + characteristics) ✅ · test cases ✅ · **bonus** safety guardrails ✅
+
+### Deliverables
+Top‑level `README.md` · `PRESENTATION.md` (15–20 min demo script) · `setup.sh` (`setup`/`test`/`run all`/`stop`/`doctor`) · `LICENSE` · real demo screenshots + GIF in [`docs/`](./docs). Each project ships its own deep‑dive `README.md` + a `REQUIREMENTS.md` mapping the brief to code, pinned `requirements.txt`, `.env.example`, tests, and an eval harness.
+
+### Engineering notes
+- Two bugs were caught **by live testing** and fixed during the build: Q1's vector store (swapped build‑fragile Chroma → pure NumPy cosine index) and Q3's tool‑call parsing (`llama3.1` emits inline‑JSON / Pydantic tool calls). Both verified fixed.
+- The kluster MCP code‑review tool referenced in the author's global config is **not connected** in this environment, so it was never run — flagged honestly rather than fabricated.
