@@ -14,28 +14,24 @@ A single monorepo that answers **all three** assessment questions at an advanced
 
 ## Demo
 
-All three apps, captured from the **real running prototypes** (live `llama3.1:8b`).
+Animated demos captured from the **real running prototypes** (live `llama3.1:8b`). These GIFs play right here in the README — full‑quality MP4s are in [`demo-videos/`](./demo-videos).
 
 ### Q1 — Agentic RAG
-Answer with an **inline citation** (`[mars.md p.1 / chunk 3]`), the exact **source passage** backing it, and the **agent reasoning trace** (analyze → retrieve → grade):
+The agent rewrites the query, retrieves with hybrid search, grades the chunks, and answers with an **inline citation** (`[mars.md p.1 / chunk 3]`) backed by the exact **source passage** + a visible **reasoning trace**:
 
-![Q1 Agentic RAG screenshot](./docs/q1-rag.png)
+![Q1 Agentic RAG demo](./demo-videos/gif/Q1-Agentic-RAG.gif)
 
 ### Q2 — Streaming Chat
-Token-by-token SSE streaming with a clean web UI — and **session memory** (the assistant recalls a name given earlier in the same session, replayed from SQLite):
+**Token‑by‑token SSE streaming** with a clean web UI, plus **session memory** — the assistant is told a name and recalls it on a fresh request in the same session (replayed from SQLite):
 
-![Q2 streaming + memory demo](./docs/demo.gif)
-
-![Q2 streaming chat UI](./docs/q2-chat.png)
+![Q2 Streaming Chat demo](./demo-videos/gif/Q2-Streaming-Chat.gif)
 
 ### Q3 — Agentic AI (SQL Analyst)
-The agent answers a business question by writing SQL, and the trace shows **self-correction** — a `run_sql` error ("no such column") is fed back and the agent re-plans (`get_schema` → retry):
+The agent answers a business question by writing SQL, showing the **thought → tool → SQL** trace — including **self‑correction** when a query errors:
 
-![Q3 SQL analytics agent screenshot](./docs/q3-sql-agent.png)
+![Q3 SQL Analytics Agent demo](./demo-videos/gif/Q3-SQL-Agent.gif)
 
-> Screenshots captured headlessly with Playwright/Chromium against the live apps; the Q2 GIF was recorded with [`vhs`](https://github.com/charmbracelet/vhs) (tape: [`docs/demo.tape`](./docs/demo.tape)). See [`PRESENTATION.md`](./PRESENTATION.md) for the full 15–20 min demo flow.
-
-🎬 **Full screen-recording videos of all three apps** are in [`demo-videos/`](./demo-videos) (`Q1`, `Q2`, `Q3` — click a file → **View raw** to play).
+> GIFs loop in ~15–20s (Q1/Q3 sped up to trim local‑model latency; Q2 real‑time). Recorded headlessly with Playwright/Chromium. **Full‑length MP4s:** [`demo-videos/`](./demo-videos). **Static screenshots:** [`docs/`](./docs). See [`PRESENTATION.md`](./PRESENTATION.md) for the full 15–20 min demo flow.
 
 ## TL;DR — one command
 
