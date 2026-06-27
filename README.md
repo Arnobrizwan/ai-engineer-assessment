@@ -35,6 +35,8 @@ The agent answers a business question by writing SQL, and the trace shows **self
 
 > Screenshots captured headlessly with Playwright/Chromium against the live apps; the Q2 GIF was recorded with [`vhs`](https://github.com/charmbracelet/vhs) (tape: [`docs/demo.tape`](./docs/demo.tape)). See [`PRESENTATION.md`](./PRESENTATION.md) for the full 15–20 min demo flow.
 
+🎬 **Full screen-recording videos of all three apps** are in [`demo-videos/`](./demo-videos) (`Q1`, `Q2`, `Q3` — click a file → **View raw** to play).
+
 ## TL;DR — one command
 
 A top-level [`setup.sh`](./setup.sh) bootstraps and runs everything (Python 3.11 + Ollama required):
