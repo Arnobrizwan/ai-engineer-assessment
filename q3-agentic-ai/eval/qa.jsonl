@@ -1,0 +1,12 @@
+{"id": "q01_customer_count", "question": "How many customers are in the database?", "expected_substrings": ["8"]}
+{"id": "q02_product_count", "question": "How many products are there in total?", "expected_substrings": ["8"]}
+{"id": "q03_order_count", "question": "How many orders are in the database?", "expected_substrings": ["12"]}
+{"id": "q04_top_product_revenue", "question": "Which single product generated the most total revenue?", "expected_substrings": ["27-inch Monitor", "27 inch Monitor", "Monitor"]}
+{"id": "q05_top_customer_spend", "question": "Which customer has spent the most money in total?", "expected_substrings": ["Diana Prince", "Diana"]}
+{"id": "q06_category_count", "question": "How many distinct product categories are there?", "expected_substrings": ["4", "four"]}
+{"id": "q07_completed_orders", "question": "How many orders have the status 'completed'?", "expected_substrings": ["11"]}
+{"id": "q08_cancelled_orders", "question": "How many orders were cancelled?", "expected_substrings": ["1", "one"]}
+{"id": "q09_accessories_products", "question": "How many products are in the 'Accessories' category?", "expected_substrings": ["4", "four"]}
+{"id": "q10_usa_customers", "question": "How many customers are located in the USA?", "expected_substrings": ["2", "two"]}
+{"id": "q11_most_expensive_product", "question": "What is the most expensive product by unit price?", "expected_substrings": ["Ergonomic Chair", "Chair"]}
+{"id": "q12_total_revenue", "question": "What is the total revenue across all order items?", "expected_substrings": ["3690", "3,690"]}

@@ -4,7 +4,7 @@ A single monorepo that answers **all three** assessment questions at an advanced
 
 | # | Project | What it is | Stack | Folder |
 |---|---------|------------|-------|--------|
-| **Q1** | **Agentic RAG** | A self‑grading retrieval agent that rewrites queries, retrieves with hybrid search, checks its own evidence, and answers **with citations** | Streamlit · Chroma · BM25 · RRF · Ollama | [`q1-agentic-rag/`](./q1-agentic-rag) |
+| **Q1** | **Agentic RAG** | A self‑grading retrieval agent that rewrites queries, retrieves with hybrid search, checks its own evidence, and answers **with citations** | Streamlit · NumPy dense + BM25 · RRF · Ollama | [`q1-agentic-rag/`](./q1-agentic-rag) |
 | **Q2** | **Streaming Chat** | A FastAPI **SSE** endpoint that streams the LLM **token‑by‑token**, with DB‑backed chat memory and a polished web UI | FastAPI · SSE · SQLAlchemy/SQLite · Docker | [`q2-streaming-chat/`](./q2-streaming-chat) |
 | **Q3** | **Agentic AI (SQL Analyst)** | A ReAct tool‑calling agent that answers business questions against a SQL database, self‑correcting on bad queries | Streamlit · Ollama tool‑calling · SQLite | [`q3-agentic-ai/`](./q3-agentic-ai) |
 
@@ -14,11 +14,26 @@ A single monorepo that answers **all three** assessment questions at an advanced
 
 ## Demo
 
-Live token-by-token SSE streaming **and** DB-backed session memory (Q2) — the assistant is told a name, then recalls it on a fresh request in the same session because prior turns are replayed from SQLite:
+All three apps, captured from the **real running prototypes** (live `llama3.1:8b`).
+
+### Q1 — Agentic RAG
+Answer with an **inline citation** (`[mars.md p.1 / chunk 3]`), the exact **source passage** backing it, and the **agent reasoning trace** (analyze → retrieve → grade):
+
+![Q1 Agentic RAG screenshot](./docs/q1-rag.png)
+
+### Q2 — Streaming Chat
+Token-by-token SSE streaming with a clean web UI — and **session memory** (the assistant recalls a name given earlier in the same session, replayed from SQLite):
 
 ![Q2 streaming + memory demo](./docs/demo.gif)
 
-> Recorded from the real running app with [`vhs`](https://github.com/charmbracelet/vhs) (tape: [`docs/demo.tape`](./docs/demo.tape)) using the bundled streaming client [`q2-streaming-chat/client.sh`](./q2-streaming-chat/client.sh). Q1 and Q3 are best seen interactively — see [`PRESENTATION.md`](./PRESENTATION.md) for the full demo flow.
+![Q2 streaming chat UI](./docs/q2-chat.png)
+
+### Q3 — Agentic AI (SQL Analyst)
+The agent answers a business question by writing SQL, and the trace shows **self-correction** — a `run_sql` error ("no such column") is fed back and the agent re-plans (`get_schema` → retry):
+
+![Q3 SQL analytics agent screenshot](./docs/q3-sql-agent.png)
+
+> Screenshots captured headlessly with Playwright/Chromium against the live apps; the Q2 GIF was recorded with [`vhs`](https://github.com/charmbracelet/vhs) (tape: [`docs/demo.tape`](./docs/demo.tape)). See [`PRESENTATION.md`](./PRESENTATION.md) for the full 15–20 min demo flow.
 
 ## TL;DR — one command
 
@@ -27,7 +42,7 @@ A top-level [`setup.sh`](./setup.sh) bootstraps and runs everything (Python 3.11
 ```bash
 ./setup.sh doctor     # check tools, models, and venv status
 ./setup.sh setup      # pull models, create per-project venvs, install deps, seed Q3 DB
-./setup.sh test       # run all three unit suites (100 tests, no LLM needed)
+./setup.sh test       # run all three unit suites (128 tests, no LLM needed)
 ./setup.sh run all    # launch all three in the background (Q1 :8501, Q2 :8000, Q3 :8502)
 ./setup.sh stop       # stop them and free the ports
 # or run one in the foreground:
@@ -55,13 +70,13 @@ Each subproject has its own deep‑dive `README.md` and a `REQUIREMENTS.md` that
 
 ## Test status (all offline, LLM mocked)
 
-| Project | Unit tests | Live integration test |
+| Project | Unit tests | Live eval / integration (real `llama3.1:8b`) |
 |---------|-----------|------------------------|
-| Q1 Agentic RAG | **30 passed** | live hybrid retrieval; eval harness: **100% hit‑rate, 100% groundedness** |
+| Q1 Agentic RAG | **47 passed** | eval harness: hit‑rate **100%**, **MRR 1.000**, **nDCG@5 0.995**, groundedness **100%**, faithfulness (LLM‑judge) **0.92** |
 | Q2 Streaming Chat | **19 passed** | real SSE token stream against live Ollama |
-| Q3 Agentic AI | **51 passed** | live tool‑calling loop against `llama3.1:8b` (3/3 stable) |
+| Q3 Agentic AI | **62 passed** | tool‑calling loop + accuracy eval: **12/12 = 100%**, avg 3.3 iterations |
 
-> **100 unit tests, all green, no LLM required.** Each project also has one live `@pytest.mark.integration` test that runs end‑to‑end against Ollama and was verified passing during development.
+> **128 unit tests, all green, no LLM required.** Each project also has one live `@pytest.mark.integration` test (and Q1/Q3 ship an eval harness) that runs end‑to‑end against Ollama and was verified passing during development.
 
 ```bash
 cd <project> && . .venv/bin/activate && pytest -q          # unit suite, no LLM needed

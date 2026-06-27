@@ -50,6 +50,8 @@ SQL Analytics Agent)** to the exact file and function that satisfies it.
 | Temp seeded SQLite DB in tests | `tests/conftest.py::seeded_db`, `toolbox` | ✅ |
 | Tests run WITHOUT a live LLM (mock/monkeypatch) | `tests/test_loop.py::ScriptedLLM` (fake `LLMClient`) | ✅ |
 | Optional `@pytest.mark.integration` auto-skipped if Ollama down | `tests/test_integration.py`, `pytest.ini` | ✅ |
+| Accuracy eval harness (DB-derived ground truth, % accuracy + avg iterations) | `eval/qa.jsonl`, `eval/eval.py` (`answer_matches`, `aggregate`, `run_evaluation`) | ✅ |
+| Offline unit tests for eval scoring/aggregation (mocked answers) | `tests/test_eval.py` | ✅ |
 
 ## Deliverables
 

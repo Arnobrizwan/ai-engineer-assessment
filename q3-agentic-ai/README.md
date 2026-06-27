@@ -183,6 +183,41 @@ pytest -m integration      # optional live end-to-end test (needs Ollama)
 Every test uses a temporary, freshly seeded database (`conftest.py`) — the real
 `analytics.db` is never touched.
 
+### Evaluation (accuracy harness)
+
+Beyond pass/fail unit tests, the project ships an **accuracy benchmark** that
+reports how often the agent produces a *correct* answer — the standard way to
+characterise an LLM/SQL system ("correct X% of the time").
+
+- `eval/qa.jsonl` — ~12 natural-language business questions. Each carries
+  `expected_substrings`; an answer passes if it contains at least one (matched
+  case-insensitively). **Ground truth was derived by querying the seeded
+  `analytics.db` directly**, not hand-written, so the expected answers are
+  guaranteed correct (e.g. 8 customers, top product "27-inch Monitor" at
+  $1280.00, top spender "Diana Prince" at $980.00, total revenue $3690.00).
+- `eval/eval.py` — runs the **real** agent (live Ollama) over every question,
+  grades it, and reports per-question PASS/FAIL, overall **SQL-answer accuracy**
+  (`passed/total = %`), and **average agent iterations**. The scoring functions
+  (`answer_matches`, `aggregate`) are pure and unit-tested offline in
+  `tests/test_eval.py`.
+
+Run the live benchmark (needs Ollama + the model):
+
+```bash
+python -m eval.eval
+```
+
+It exits cleanly (code 2) if Ollama is unreachable. A representative local run on
+`llama3.1:8b` (temperature 0):
+
+```
+SQL-answer accuracy: 12/12 = 100%
+Average iterations:  3.33
+```
+
+The small local model is somewhat non-deterministic, so an occasional miss
+(11/12) is expected and acceptable; the harness reports the real number each run.
+
 ---
 
 ## Limitations
@@ -219,7 +254,12 @@ q3-agentic-ai/
 │   ├── test_guard.py    # SQL safety guard
 │   ├── test_tools.py    # schema/query/chart tools
 │   ├── test_loop.py     # loop control flow + self-correction (mocked LLM)
+│   ├── test_eval.py     # offline scoring/aggregation unit tests
 │   └── test_integration.py  # optional live Ollama test
+├── eval/
+│   ├── __init__.py
+│   ├── qa.jsonl         # NL questions + DB-derived expected answers
+│   └── eval.py          # live accuracy harness (python -m eval.eval)
 ├── app.py               # Streamlit prototype
 ├── seed.py              # idempotent DB seeding entry point
 ├── requirements.txt

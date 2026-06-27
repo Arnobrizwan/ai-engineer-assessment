@@ -169,10 +169,27 @@ boundaries.
   - `test_citations.py` — citation formatting, extraction, dedupe, filtering.
   - `test_agent.py` — grade/decision logic, reformulation on weak results,
     grounded+cited answers, and trace completeness (via a scripted `FakeLLM`).
+  - `test_eval_metrics.py` — deterministic checks of the ranking metrics
+    (MRR, nDCG@k, DCG), robust score parsing, and the faithfulness judge with a
+    mocked LLM.
 - **One integration test** (`test_integration.py`, marked `@pytest.mark.integration`)
   runs the full loop against a live Ollama and **auto-skips** when unreachable.
-- **Eval harness** (`eval/eval.py` + `eval/qa.jsonl`) measures **retrieval
-  hit-rate** and **answer groundedness** over the sample docs, offline or live.
+
+### Eval harness (`eval/eval.py` + `eval/qa.jsonl`, metrics in `eval/metrics.py`)
+
+Over the bundled docs, with relevance defined as "passage comes from the
+expected source document", it reports:
+
+| Metric | Meaning | Mode |
+|--------|---------|------|
+| **Retrieval hit-rate** | fraction of questions where a relevant passage was retrieved | offline + live |
+| **MRR** | mean reciprocal rank of the first relevant retrieved passage (`mean_reciprocal_rank`) | offline + live |
+| **nDCG@k** | normalised discounted cumulative gain over the ranked passages, default k=5 (`ndcg_at_k`) | offline + live |
+| **Groundedness** | answer contains the expected substring(s) AND cites a real source | offline + live |
+| **Faithfulness (LLM-judge)** | RAGAS-style 0–1 score of how well the answer is supported by the retrieved context (`judge_faithfulness`) | **live only** (needs Ollama; N/A in mock mode) |
+
+The ranking metrics are pure functions (no LLM), so they are unit-tested
+directly. Faithfulness uses an LLM-as-judge and is only computed under `--live`.
 
 Dense retrieval is injectable, so the unit suite mocks it and runs with only
 `pytest`, `python-dotenv`, `requests`, `numpy`, and `rank-bm25` installed (no

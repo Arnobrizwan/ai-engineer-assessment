@@ -48,8 +48,10 @@ satisfies it. All paths are relative to `q1-agentic-rag/`.
 | BM25 ranking + lexical rerank + hybrid fusion | `tests/test_retriever.py` |
 | Citation formatting / extraction / filtering | `tests/test_citations.py` |
 | Agent grade + decision + reformulation logic (mocked LLM) | `tests/test_agent.py` |
+| Ranking metrics: MRR, nDCG@k, DCG, score parsing, faithfulness judge (mocked) | `tests/test_eval_metrics.py` → `eval/metrics.py`, `eval/eval.py` |
 | Live end-to-end (auto-skip if no Ollama) | `tests/test_integration.py` (`@pytest.mark.integration`) |
-| Eval harness: retrieval hit-rate + groundedness | `eval/eval.py` + `eval/qa.jsonl` |
+| Eval harness: retrieval hit-rate, MRR, nDCG@5, groundedness, faithfulness | `eval/eval.py` + `eval/metrics.py` + `eval/qa.jsonl` |
 
-**Test status:** `python -m pytest -q` → 27 passed, 1 deselected (integration).
-**Eval status:** `python -m eval.eval` (mock) → retrieval hit-rate 100%, groundedness 83%.
+**Test status:** `python -m pytest -q` → 47 passed, 1 deselected (integration).
+**Eval status (mock):** retrieval hit-rate 100%, MRR 1.000, nDCG@5 0.975, groundedness 83%, faithfulness N/A.
+**Eval status (--live):** retrieval hit-rate 100%, MRR 1.000, nDCG@5 0.995, groundedness 100%, faithfulness 0.917.
